@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
+const moment = require("moment");
 const path = require("path");
 const multer = require("multer");
 
@@ -40,36 +41,72 @@ const uploadForContact = multer({
   fileFilter: fileFilter
 });
 
+const low = require("lowdb");
+const FileAsync = require("lowdb/adapters/FileAsync");
+
+const driverAdapter = new FileAsync("./data/driver/driverDB.json");
+const contactAdapter = new FileAsync("./data/contact/contactDB.json");
+
 router.get("/test", function(req, res) {
   res.send("Test Route");
 });
 
-router.post(
-  "/driverUpload",
-  uploadForDriver.single("image"),
-  (req, res, next) => {
-    const file = req.file;
-    if (!file) {
-      const error = new Error("Please upload a file");
-      error.httpStatusCode = 400;
-      return next(error);
-    }
-    res.status(200).send(file);
-  }
-);
+low(driverAdapter).then(driverDB => {
+  low(contactAdapter).then(contactDB => {
+    const driver = driverDB.get("driver").value();
+    const contact = contactDB.get("contact").value();
 
-router.post(
-  "/contactUpload",
-  uploadForContact.single("image"),
-  (req, res, next) => {
-    const file = req.file;
-    if (!file) {
-      const error = new Error("Please upload a file");
-      error.httpStatusCode = 400;
-      return next(error);
-    }
-    res.status(200).send(file);
-  }
-);
+    router.post(
+      "/driverUpload",
+      uploadForDriver.single("image"),
+      (req, res, next) => {
+        const file = req.file;
+        let { firstname, lastname } = req.body;
 
+        if (!file) {
+          const error = new Error("Please upload a file");
+          error.httpStatusCode = 400;
+          return next(error);
+        }
+        driverDB
+          .get("driver")
+          .push({
+            firstname: firstname,
+            lastname: lastname,
+            lastModified: moment().format("MMMM Do YYYY, h:mm:ss a")
+          })
+          .last()
+          .assign({ id: Date.now().toString() })
+          .write();
+        res.status(200).send(file);
+      }
+    );
+
+    router.post(
+      "/contactUpload",
+      uploadForContact.single("image"),
+      (req, res, next) => {
+        const file = req.file;
+        let { firstname, lastname } = req.body;
+
+        if (!file) {
+          const error = new Error("Please upload a file");
+          error.httpStatusCode = 400;
+          return next(error);
+        }
+        driverDB
+          .get("driver")
+          .push({
+            firstname: firstname,
+            lastname: lastname,
+            lastModified: moment().format("MMMM Do YYYY, h:mm:ss a")
+          })
+          .last()
+          .assign({ id: Date.now().toString() })
+          .write();
+        res.status(200).send(file);
+      }
+    );
+  });
+});
 module.exports = router;

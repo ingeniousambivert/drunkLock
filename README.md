@@ -23,6 +23,8 @@ Open http://localhost:8000
 
 [NodeJS](https://nodejs.org)
 
+[LowDB](https://www.npmjs.com/package/lowdb)
+
 ## Contributing
 
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
