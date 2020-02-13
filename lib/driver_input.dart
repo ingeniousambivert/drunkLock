@@ -15,7 +15,16 @@ class DriverImageInput extends StatefulWidget {
 }
 
 class _DriverImageInput extends State<DriverImageInput> {
-  // To store the file provided by the image_picker
+
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
+
+  @override
+  void dispose() {
+    firstNameController.dispose();
+    super.dispose();
+  }
+
   File _imageFile;
 
   // To track the file uploading state
@@ -33,6 +42,20 @@ class _DriverImageInput extends State<DriverImageInput> {
 
     // Closes the bottom sheet
     Navigator.pop(context);
+  }
+
+  void _makePostRequest() async {
+
+    final Map<String,dynamic> driverData = {
+      'firstname': firstNameController.text,
+      'lastname': lastNameController.text,
+    };
+
+    Map<String, String> headers = {"Content-type": "application/json"};
+
+    final response = await http.post(baseUrl, headers: headers, body: jsonEncode(driverData));
+    print(response);
+
   }
 
   Future<Map<String, dynamic>> _uploadImage(File image) async {
@@ -57,6 +80,7 @@ class _DriverImageInput extends State<DriverImageInput> {
     imageUploadRequest.files.add(file);
 
     try {
+
       final streamedResponse = await imageUploadRequest.send();
       final response = await http.Response.fromStream(streamedResponse);
 
@@ -81,12 +105,12 @@ class _DriverImageInput extends State<DriverImageInput> {
     // Check if any error occured
     if (response == null) {
       _uploaded = false;
-      Toast.show("Image upload failed !", context,
-                     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      Toast.show("Details uploading failed ", context,
+                     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM,textColor: Colors.white,backgroundColor: Colors.redAccent[400]);
     } else {
       _uploaded = true;
-      Toast.show("Image upload successful !", context,
-                     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM);
+      Toast.show("Details uploaded successfully ", context,
+                     duration: Toast.LENGTH_LONG, gravity: Toast.BOTTOM,textColor: Colors.white,backgroundColor: Colors.lightGreen[600]);
     }
   }
 
@@ -96,6 +120,7 @@ class _DriverImageInput extends State<DriverImageInput> {
       _imageFile = null;
     });
   }
+
 
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
@@ -150,13 +175,13 @@ class _DriverImageInput extends State<DriverImageInput> {
           margin: EdgeInsets.only(top: 10.0),
           child: CircularProgressIndicator());
     } else if (!_isUploading  &&  _uploaded == false && _imageFile != null ) {
-
       btnWidget = Container(
         margin: EdgeInsets.only(top: 10.0),
         child: RaisedButton(
-          child: Text('Upload'),
+          child: Text('Submit'),
           onPressed: () {
             _startUploading();
+            _makePostRequest();
           },
           color: Colors.pinkAccent[700],
           textColor: Colors.white,
@@ -168,7 +193,7 @@ class _DriverImageInput extends State<DriverImageInput> {
 
   Widget _buildNextBtn() {
     Widget btnWidget = Container();
-       if ( _imageFile != null && _uploaded == true) {
+       if (_uploaded == true) {
       // If image is uploaded by the user then show a next btn
       btnWidget = Container(
         margin: EdgeInsets.only(top: 10.0),
@@ -218,6 +243,7 @@ class _DriverImageInput extends State<DriverImageInput> {
                     color: Colors.grey[900],
                     elevation: 3.0,
                     child: TextFormField(
+                      controller: firstNameController,
                       style: TextStyle(
                         color: Colors.white60,
                         fontSize: 16,
@@ -241,6 +267,7 @@ class _DriverImageInput extends State<DriverImageInput> {
                     color: Colors.grey[900],
                     elevation: 3.0,
                     child: TextFormField(
+                      controller: lastNameController,
                       style: TextStyle(
                         color: Colors.white60,
                         fontSize: 16,

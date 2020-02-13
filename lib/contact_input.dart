@@ -172,7 +172,7 @@ class _ContactImageInput extends State<ContactImageInput> {
       btnWidget = Container(
         margin: EdgeInsets.only(top: 10.0),
         child: RaisedButton(
-          child: Text('Upload'),
+          child: Text('Submit'),
           onPressed: () {
             //makeRequest();
             _startUploading();
@@ -334,7 +334,7 @@ class _ContactImageInput extends State<ContactImageInput> {
                 width: 250,
                 child: OutlineButton(
                   onPressed: () => _openImagePickerModal(context),
-                  borderSide: BorderSide(color: Color(0xFFf7d426), width: 2.0),
+                  borderSide: BorderSide(color: Colors.pinkAccent[700], width: 2.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
