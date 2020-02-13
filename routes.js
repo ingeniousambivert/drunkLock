@@ -72,13 +72,11 @@ low(driverAdapter).then(driverDB => {
           .get("driver")
           .push({
             firstname: firstname,
-            lastname: lastname,
-            lastModified: moment().format("MMMM Do YYYY, h:mm:ss a")
+            lastname: lastname
           })
           .last()
-          .assign({ id: Date.now().toString() })
           .write();
-        res.status(200).send(file);
+        res.status(200).send(body);
       }
     );
 
@@ -98,14 +96,11 @@ low(driverAdapter).then(driverDB => {
           .get("contact")
           .push({
             firstname: firstname,
-            lastname: lastname,
-            phone: phone,
-            lastModified: moment().format("MMMM Do YYYY, h:mm:ss a")
+            lastname: lastname
           })
           .last()
-          .assign({ id: Date.now().toString() })
           .write();
-        res.status(200).send(file);
+        res.status(200).send(body);
       }
     );
   });
