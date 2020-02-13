@@ -94,8 +94,8 @@ low(driverAdapter).then(driverDB => {
           error.httpStatusCode = 400;
           return next(error);
         }
-        driverDB
-          .get("driver")
+        contactDB
+          .get("contact")
           .push({
             firstname: firstname,
             lastname: lastname,
