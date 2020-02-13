@@ -31,7 +31,7 @@ class _DriverImageInput extends State<DriverImageInput> {
   bool _isUploading = false;
   bool _uploaded = false ;
 
-  String baseUrl = 'http://192.168.1.215:8000/driverUpload';
+  String baseUrl = 'http://192.168.1.34:8000/driverUpload';
 
   void _getImage(BuildContext context, ImageSource source) async {
     File image = await ImagePicker.pickImage(source: source);
@@ -44,6 +44,7 @@ class _DriverImageInput extends State<DriverImageInput> {
     Navigator.pop(context);
   }
 
+  //Sends data to server
   void _makePostRequest() async {
 
     final Map<String,dynamic> driverData = {
@@ -58,6 +59,7 @@ class _DriverImageInput extends State<DriverImageInput> {
 
   }
 
+  // Image Upload Script
   Future<Map<String, dynamic>> _uploadImage(File image) async {
     setState(() {
       _isUploading = true;
