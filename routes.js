@@ -87,7 +87,7 @@ low(driverAdapter).then(driverDB => {
       uploadForContact.single("image"),
       (req, res, next) => {
         const file = req.file;
-        let { firstname, lastname } = req.body;
+        let { firstname, lastname, phone } = req.body;
 
         if (!file) {
           const error = new Error("Please upload a file");
@@ -99,6 +99,7 @@ low(driverAdapter).then(driverDB => {
           .push({
             firstname: firstname,
             lastname: lastname,
+            phone: phone,
             lastModified: moment().format("MMMM Do YYYY, h:mm:ss a")
           })
           .last()
@@ -109,4 +110,5 @@ low(driverAdapter).then(driverDB => {
     );
   });
 });
+
 module.exports = router;
