@@ -1,6 +1,6 @@
 # drunk_lock
 
-A new Flutter application.
+A Flutter application to control the drunkLock System
 
 ## Getting Started
 
