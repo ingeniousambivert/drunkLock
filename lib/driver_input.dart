@@ -124,7 +124,7 @@ class _DriverImageInput extends State<DriverImageInput> {
 
   void _openImagePickerModal(BuildContext context) {
     final flatButtonColor = Theme.of(context).primaryColor;
-    print('Image Picker Modal Called');
+
     showModalBottomSheet(
         context: context,
         builder: (BuildContext context) {
