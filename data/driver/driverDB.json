@@ -1,3 +1,8 @@
 {
-  "driver": [{}]
+  "driver": [
+    {
+      "firstname": "john",
+      "lastname": "doe"
+    }
+  ]
 }

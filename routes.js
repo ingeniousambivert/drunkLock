@@ -1,9 +1,13 @@
 const express = require("express");
 const router = express.Router();
+const bodyParser = require("body-parser");
 
 const moment = require("moment");
 const path = require("path");
 const multer = require("multer");
+
+router.use(bodyParser.urlencoded({ extended: true }));
+router.use(bodyParser.json());
 
 const storageForDriver = multer.diskStorage({
   destination: function(req, file, callback) {
@@ -56,6 +60,14 @@ low(driverAdapter).then(driverDB => {
     const driver = driverDB.get("driver").value();
     const contact = contactDB.get("contact").value();
 
+    router.get("/driverUpload", (req, res) => {
+      res.sendFile(__dirname + "/public/driverForm.html");
+    });
+
+    router.get("/contactUpload", (req, res) => {
+      res.sendFile(__dirname + "/public/contactForm.html");
+    });
+
     router.post(
       "/driverUpload",
       uploadForDriver.single("image"),
@@ -63,11 +75,11 @@ low(driverAdapter).then(driverDB => {
         const file = req.file;
         let { firstname, lastname } = req.body;
 
-        if (!file) {
-          const error = new Error("Please upload a file");
-          error.httpStatusCode = 400;
-          return next(error);
-        }
+        // if (!file) {
+        //   const error = new Error("Please upload a file");
+        //   error.httpStatusCode = 400;
+        //   return next(error);
+        // }
         driverDB
           .get("driver")
           .push({
@@ -76,7 +88,7 @@ low(driverAdapter).then(driverDB => {
           })
           .last()
           .write();
-        res.status(200).send(body);
+        res.sendStatus(200);
       }
     );
 
@@ -86,21 +98,21 @@ low(driverAdapter).then(driverDB => {
       (req, res, next) => {
         const file = req.file;
         let { firstname, lastname, phone } = req.body;
-
-        if (!file) {
-          const error = new Error("Please upload a file");
-          error.httpStatusCode = 400;
-          return next(error);
-        }
+        // if (!file) {
+        //   const error = new Error("Please upload a file");
+        //   error.httpStatusCode = 400;
+        //   return next(error);
+        // }
         contactDB
           .get("contact")
           .push({
             firstname: firstname,
-            lastname: lastname
+            lastname: lastname,
+            phone: phone
           })
           .last()
           .write();
-        res.status(200).send(body);
+        res.sendStatus(200);
       }
     );
   });
