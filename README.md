@@ -1,2 +1,2 @@
 # drunkLock
-Server and app for the drunkLock IOT System based on Raspberry Pi
+Recognition Script written in python for the drunkLock IOT System based on Raspberry Pi
